@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  主布局骨架（阶段一）：
+  - 顶部居中：DynamicIslandView 灵动岛胶囊
+  - 中部：LEGNIX 空白主页文字标识
+  后续阶段会在此基础上叠加搜索栏、WebView、抽屉、多任务面板等。
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_page">
+
+    <!-- LEGNIX 文字标识（空白主页） -->
+    <TextView
+        android:id="@+id/legnixLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/legnix"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.15"
+        android:textColor="@color/glass_text"
+        android:includeFontPadding="false" />
+
+    <!-- 灵动岛胶囊 -->
+    <com.legnix.lxnav.view.DynamicIslandView
+        android:id="@+id/dynamicIsland"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/capsule_height"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="12dp"
+        android:minWidth="100dp" />
+
+</FrameLayout>

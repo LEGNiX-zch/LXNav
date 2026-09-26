@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 液态玻璃配色（浅色） -->
+    <color name="glass_start">#CCFFFFFF</color>
+    <color name="glass_end">#80FFFFFF</color>
+    <color name="glass_stroke">#4DFFFFFF</color>
+    <color name="glass_text">#FF1A1A1A</color>
+
+    <!-- 背景 -->
+    <color name="bg_page">#FFF5F5F7</color>
+
+    <!-- 强调色 -->
+    <color name="accent">#FF2D6CF6</color>
+
+    <!-- 通用 -->
+    <color name="transparent">#00000000</color>
+    <color name="scrim">#80000000</color>
+</resources>

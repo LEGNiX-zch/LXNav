@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 液态玻璃配色（深色） -->
+    <color name="glass_start">#CC2A2A2E</color>
+    <color name="glass_end">#801C1C1E</color>
+    <color name="glass_stroke">#33FFFFFF</color>
+    <color name="glass_text">#FFFFFFFF</color>
+
+    <color name="bg_page">#FF000000</color>
+    <color name="accent">#FF5E9BFF</color>
+</resources>

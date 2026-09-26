@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="capsule_corner">999dp</dimen>
+    <dimen name="capsule_height">30dp</dimen>
+    <dimen name="capsule_horizontal_padding">14dp</dimen>
+    <dimen name="capsule_text_size">12sp</dimen>
+</resources>
