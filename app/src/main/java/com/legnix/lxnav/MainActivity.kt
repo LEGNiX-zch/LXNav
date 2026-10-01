@@ -1,20 +1,23 @@
 package com.legnix.lxnav
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.legnix.lxnav.data.model.Tab
 import com.legnix.lxnav.databinding.ActivityMainBinding
 import com.legnix.lxnav.view.DynamicIslandView
 import com.legnix.lxnav.view.TabStackPanel
+import com.legnix.lxnav.view.ToolbarDrawerView
 
 /**
- * 主界面（阶段二）。
- * 灵动岛 + 堆叠卡片多任务面板联动。
+ * 主界面（阶段三）。
+ * 灵动岛 + 多任务面板 + 左侧抽屉工具栏联动。
  *
- * 交互链路：
- * - 长按灵动岛 → 胶囊弹性拉长 → 弹出多任务面板
- * - 面板内上下滑动浏览卡片 / 左右滑关闭 / 点击切换
- * - 关闭面板 → 胶囊弹性收缩
+ * 返回键逻辑：
+ * 1. 抽屉打开 → 优先关闭抽屉
+ * 2. 多任务面板打开 → 优先关闭面板
+ * 3. 否则 → 网页后退 / 关闭标签 / 退出APP
  */
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +37,8 @@ class MainActivity : AppCompatActivity() {
 
         setupDynamicIsland()
         setupTabStackPanel()
+        setupToolbarDrawer()
+        setupSettingsButton()
     }
 
     private fun setupDynamicIsland() {
@@ -66,6 +71,41 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun setupToolbarDrawer() {
+        binding.btnMenu.setOnClickListener {
+            if (!binding.toolbarDrawer.isOpen()) binding.toolbarDrawer.open()
+        }
+        binding.toolbarDrawer.setListener(object : ToolbarDrawerView.Listener {
+            override fun onBack() {
+                // TODO 阶段六：WebView 后退
+            }
+            override fun onForward() {
+                // TODO 阶段六：WebView 前进
+            }
+            override fun onRefresh() {
+                // TODO 阶段六：WebView 刷新
+            }
+            override fun onNewTab() {
+                // TODO 阶段六：新建标签
+            }
+            override fun onAddBookmark() {
+                // TODO 阶段七：添加收藏
+            }
+            override fun onShowBookmarks() {
+                // TODO 阶段七：打开收藏列表
+            }
+            override fun onDismiss() {
+                // 抽屉收回完成
+            }
+        })
+    }
+
+    private fun setupSettingsButton() {
+        binding.btnSettings.setOnClickListener {
+            // TODO 阶段五：跳转 SettingsActivity
+        }
+    }
+
     private fun openMultiTask() {
         binding.dynamicIsland.stretch()
         binding.tabStackPanel.setTabs(demoTabs)
@@ -81,8 +121,11 @@ class MainActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
         when {
-            binding.tabStackPanel.visibility == android.view.View.VISIBLE -> closeMultiTask()
+            binding.toolbarDrawer.isOpen() -> binding.toolbarDrawer.close()
+            binding.tabStackPanel.visibility == View.VISIBLE -> closeMultiTask()
             else -> {
+                // TODO 阶段六：WebView 可后退则后退
+                // TODO 阶段六：否则关闭标签，再按退出APP
                 @Suppress("DEPRECATION")
                 super.onBackPressed()
             }

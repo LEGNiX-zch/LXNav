@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  左侧抽屉工具栏布局。
+  半宽面板，从左侧滑入，包含 6 个工具按钮（纵向排列）。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawerContent"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:background="@drawable/bg_liquid_glass"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_back"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null" />
+
+    <ImageButton
+        android:id="@+id/btnForward"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_forward"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null" />
+
+    <ImageButton
+        android:id="@+id/btnRefresh"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_refresh"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null" />
+
+    <ImageButton
+        android:id="@+id/btnNewTab"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_new_tab"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null" />
+
+    <ImageButton
+        android:id="@+id/btnAddBookmark"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_bookmark"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null" />
+
+    <ImageButton
+        android:id="@+id/btnBookmarks"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_bookmark"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null" />
+</LinearLayout>

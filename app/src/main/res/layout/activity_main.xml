@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  主布局骨架（阶段一）：
-  - 顶部居中：DynamicIslandView 灵动岛胶囊
+  主布局（阶段三）：
+  - 左上角：菜单按钮（打开抽屉）
+  - 右上角：设置按钮
+  - 顶部居中：灵动岛胶囊
   - 中部：LEGNIX 空白主页文字标识
-  后续阶段会在此基础上叠加搜索栏、WebView、抽屉、多任务面板等。
+  - 堆叠卡片多任务面板（覆盖层，默认隐藏）
+  - 左侧抽屉工具栏（覆盖层，默认隐藏）
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -31,6 +34,37 @@
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="12dp"
         android:minWidth="100dp" />
+
+    <!-- 左上角菜单按钮 -->
+    <ImageButton
+        android:id="@+id/btnMenu"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_menu"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null" />
+
+    <!-- 右上角设置按钮 -->
+    <ImageButton
+        android:id="@+id/btnSettings"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="top|end"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_settings"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null" />
+
+    <!-- 左侧抽屉工具栏（默认隐藏） -->
+    <com.legnix.lxnav.view.ToolbarDrawerView
+        android:id="@+id/toolbarDrawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <!-- 堆叠卡片多任务面板（默认隐藏） -->
     <com.legnix.lxnav.view.TabStackPanel
