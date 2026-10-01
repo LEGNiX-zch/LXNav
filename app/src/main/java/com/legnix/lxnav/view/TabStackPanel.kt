@@ -90,12 +90,13 @@ class TabStackPanel @JvmOverloads constructor(
             }
 
             override fun onScroll(
-                e1: MotionEvent,
+                e1: MotionEvent?,
                 e2: MotionEvent,
                 distanceX: Float,
                 distanceY: Float
             ): Boolean {
-                val dx = e2.x - e1.x
+                val startX = e1?.x ?: e2.x
+                val dx = e2.x - startX
                 // 横向移动为主时，拖拽当前卡片
                 if (abs(dx) > abs(distanceY) && abs(dx) > touchSlop) {
                     val card = cardViews.getOrNull(currentIndex)
@@ -107,13 +108,15 @@ class TabStackPanel @JvmOverloads constructor(
             }
 
             override fun onFling(
-                e1: MotionEvent,
+                e1: MotionEvent?,
                 e2: MotionEvent,
                 velocityX: Float,
                 velocityY: Float
             ): Boolean {
-                val dx = e2.x - e1.x
-                val dy = e2.y - e1.y
+                val startX = e1?.x ?: e2.x
+                val startY = e1?.y ?: e2.y
+                val dx = e2.x - startX
+                val dy = e2.y - startY
                 // 垂直方向 fling → 切换卡片（仅在未横向拖拽时）
                 if (!dragStarted && abs(dy) > abs(dx) && abs(dy) > touchSlop * 3) {
                     if (dy < 0) showNext() else showPrev()

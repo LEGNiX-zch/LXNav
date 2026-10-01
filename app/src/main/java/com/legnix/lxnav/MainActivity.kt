@@ -1,44 +1,75 @@
 package com.legnix.lxnav
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.legnix.lxnav.data.model.Tab
+import com.legnix.lxnav.data.BookmarkStore
+import com.legnix.lxnav.data.Prefs
 import com.legnix.lxnav.databinding.ActivityMainBinding
+import com.legnix.lxnav.ui.bookmarks.BookmarksActivity
+import com.legnix.lxnav.ui.settings.SettingsActivity
 import com.legnix.lxnav.view.DynamicIslandView
 import com.legnix.lxnav.view.TabStackPanel
 import com.legnix.lxnav.view.ToolbarDrawerView
+import com.legnix.lxnav.web.TabManager
 
 /**
- * 主界面（阶段三）。
- * 灵动岛 + 多任务面板 + 左侧抽屉工具栏联动。
+ * 主界面。
  *
- * 返回键逻辑：
- * 1. 抽屉打开 → 优先关闭抽屉
- * 2. 多任务面板打开 → 优先关闭面板
- * 3. 否则 → 网页后退 / 关闭标签 / 退出APP
+ * 完整功能：灵动岛 + 搜索栏 + WebView + 标签管理 + 抽屉工具栏 + 多任务面板。
+ *
+ * 返回键逻辑（优先级）：
+ * 1. 抽屉打开 → 关闭抽屉
+ * 2. 多任务面板打开 → 关闭面板
+ * 3. WebView 可后退 → 网页后退
+ * 4. 有多个标签 → 关闭当前标签
+ * 5. 最后一个标签 → 关闭标签并退出APP
  */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var tabManager: TabManager
 
-    /** TODO 阶段六：接入 TabManager 后由其管理 */
-    private val demoTabs = mutableListOf(
-        Tab("1", "LXNav 主页", "about:blank"),
-        Tab("2", "百度", "https://www.baidu.com"),
-        Tab("3", "GitHub", "https://github.com")
-    )
+    private val bookmarkLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val url = result.data?.getStringExtra("url")
+            if (url != null) {
+                tabManager.currentTab?.loadUrl(url)
+                binding.dynamicIsland.setPageInfo("", url)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Prefs.load(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        tabManager = TabManager(this, binding.webContainer)
+
+        // 应用动画开关到各自定义 View
+        applyAnimationSetting()
+
         setupDynamicIsland()
-        setupTabStackPanel()
+        setupSearchBar()
         setupToolbarDrawer()
         setupSettingsButton()
+        setupTabStackPanel()
+
+        // 启动时创建第一个标签（空白主页）
+        tabManager.newTab(null)
+        updateMultiTaskPanel()
+    }
+
+    private fun applyAnimationSetting() {
+        val enabled = Prefs.animationsEnabled
+        binding.dynamicIsland.animationsEnabled = enabled
+        binding.tabStackPanel.animationsEnabled = enabled
+        binding.toolbarDrawer.animationsEnabled = enabled
     }
 
     private fun setupDynamicIsland() {
@@ -49,26 +80,11 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupTabStackPanel() {
-        binding.tabStackPanel.setListener(object : TabStackPanel.Listener {
-            override fun onTabSelected(tab: Tab) {
-                // TODO 阶段六：切换到该网页
-                closeMultiTask()
-            }
-
-            override fun onTabClosed(tab: Tab) {
-                demoTabs.removeAll { it.id == tab.id }
-                if (demoTabs.isEmpty()) {
-                    closeMultiTask()
-                } else {
-                    binding.tabStackPanel.setTabs(demoTabs)
-                }
-            }
-
-            override fun onDismiss() {
-                closeMultiTask()
-            }
-        })
+    private fun setupSearchBar() {
+        binding.searchBar.onSearch = { url ->
+            tabManager.currentTab?.loadUrl(url)
+            binding.dynamicIsland.setPageInfo("", url)
+        }
     }
 
     private fun setupToolbarDrawer() {
@@ -77,38 +93,61 @@ class MainActivity : AppCompatActivity() {
         }
         binding.toolbarDrawer.setListener(object : ToolbarDrawerView.Listener {
             override fun onBack() {
-                // TODO 阶段六：WebView 后退
+                tabManager.goBack()
             }
             override fun onForward() {
-                // TODO 阶段六：WebView 前进
+                tabManager.goForward()
             }
             override fun onRefresh() {
-                // TODO 阶段六：WebView 刷新
+                tabManager.reload()
             }
             override fun onNewTab() {
-                // TODO 阶段六：新建标签
+                tabManager.newTab(null)
+                updateMultiTaskPanel()
             }
             override fun onAddBookmark() {
-                // TODO 阶段七：添加收藏
+                val tab = tabManager.currentTab ?: return
+                BookmarkStore.add(this@MainActivity, tab.title.ifEmpty { tab.url }, tab.url)
             }
             override fun onShowBookmarks() {
-                // TODO 阶段七：打开收藏列表
+                bookmarkLauncher.launch(android.content.Intent(this@MainActivity, BookmarksActivity::class.java))
             }
-            override fun onDismiss() {
-                // 抽屉收回完成
-            }
+            override fun onDismiss() {}
         })
     }
 
     private fun setupSettingsButton() {
         binding.btnSettings.setOnClickListener {
-            // TODO 阶段五：跳转 SettingsActivity
+            startActivity(android.content.Intent(this, SettingsActivity::class.java))
         }
+    }
+
+    private fun setupTabStackPanel() {
+        binding.tabStackPanel.setListener(object : TabStackPanel.Listener {
+            override fun onTabSelected(tab: com.legnix.lxnav.data.model.Tab) {
+                tabManager.switchToById(tab.id)
+                closeMultiTask()
+            }
+
+            override fun onTabClosed(tab: com.legnix.lxnav.data.model.Tab) {
+                tabManager.closeTab(tab.id)
+                if (tabManager.tabCount == 0) {
+                    closeMultiTask()
+                    // 无标签时新建一个主页
+                    tabManager.newTab(null)
+                }
+                updateMultiTaskPanel()
+            }
+
+            override fun onDismiss() {
+                closeMultiTask()
+            }
+        })
     }
 
     private fun openMultiTask() {
         binding.dynamicIsland.stretch()
-        binding.tabStackPanel.setTabs(demoTabs)
+        updateMultiTaskPanel()
         binding.tabStackPanel.show()
     }
 
@@ -117,18 +156,44 @@ class MainActivity : AppCompatActivity() {
         binding.dynamicIsland.shrink()
     }
 
+    private fun updateMultiTaskPanel() {
+        binding.tabStackPanel.setTabs(tabManager.tabs, tabManager.getCurrentIndex())
+    }
+
     @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
         when {
             binding.toolbarDrawer.isOpen() -> binding.toolbarDrawer.close()
             binding.tabStackPanel.visibility == View.VISIBLE -> closeMultiTask()
+            tabManager.goBack() -> { /* 网页后退成功 */ }
+            tabManager.tabCount > 1 -> {
+                // 关闭当前标签，切换到上一个
+                tabManager.currentTab?.let { tabManager.closeTab(it.tab.id) }
+                updateMultiTaskPanel()
+            }
             else -> {
-                // TODO 阶段六：WebView 可后退则后退
-                // TODO 阶段六：否则关闭标签，再按退出APP
+                tabManager.destroyAll()
                 @Suppress("DEPRECATION")
                 super.onBackPressed()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 设置可能变更，重新加载
+        applyAnimationSetting()
+        tabManager.currentTab?.applyUa()
+        tabManager.currentTab?.applyZoom()
+        // 更新灵动岛页面信息
+        tabManager.currentTab?.let { tab ->
+            binding.dynamicIsland.setPageInfo(tab.title, tab.url)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tabManager.destroyAll()
     }
 }

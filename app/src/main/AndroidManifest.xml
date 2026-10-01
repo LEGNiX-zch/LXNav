@@ -24,6 +24,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
+            android:label="设置" />
+
+        <activity
+            android:name=".ui.bookmarks.BookmarksActivity"
+            android:exported="false"
+            android:label="收藏" />
     </application>
 
 </manifest>

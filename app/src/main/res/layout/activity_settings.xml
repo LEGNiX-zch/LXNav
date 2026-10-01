@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  设置页布局。
+  所有设置项以列表形式排列，使用液态玻璃风格。
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_page"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 标题 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设置"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/glass_text"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 最大标签数量 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="最大标签数量"
+            android:textColor="@color/glass_text"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:id="@+id/maxTabsGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btnTabs1"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="1"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnTabs2"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="2"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnTabs3"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="3"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnTabs4"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="4"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- 主题切换 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主题"
+            android:textColor="@color/glass_text"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btnThemeGlass"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="液态"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnThemeDark"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="深色"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnThemeLight"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="浅色"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- 默认缩放 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="默认网页缩放"
+            android:textColor="@color/glass_text"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btnZoomMinus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvZoomValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="100%"
+                android:textColor="@color/glass_text"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnZoomPlus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- UA切换 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UA 模式"
+            android:textColor="@color/glass_text"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btnUaMobile"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="手机"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnUaDesktop"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="桌面"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- 动画总开关 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="动画（关闭可提升老手表性能）"
+            android:textColor="@color/glass_text"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp" />
+
+        <Switch
+            android:id="@+id/switchAnimations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <!-- 屏幕形状覆盖 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="屏幕形状（兜底适配）"
+            android:textColor="@color/glass_text"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btnScreenAuto"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="自动"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnScreenSquare"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="方形"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnScreenRound"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="圆形"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- 清除缓存/Cookie -->
+        <Button
+            android:id="@+id/btnClearCache"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="清除缓存"
+            android:textSize="13sp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnClearCookies"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="清除 Cookie"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+</ScrollView>
