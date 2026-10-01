@@ -32,4 +32,11 @@
         android:layout_marginTop="12dp"
         android:minWidth="100dp" />
 
+    <!-- 堆叠卡片多任务面板（默认隐藏） -->
+    <com.legnix.lxnav.view.TabStackPanel
+        android:id="@+id/tabStackPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </FrameLayout>
