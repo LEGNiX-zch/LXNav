@@ -118,7 +118,8 @@ class DynamicIslandView @JvmOverloads constructor(
                 "${MemInfo.getAvailableMb(context)}MB"
             }
             InfoMode.PAGE -> {
-                pageTitle.ifEmpty { pageUrl }.ifEmpty { context.getString(R.string.legnix) }
+                // PAGE 模式优先显示当前网页地址
+                pageUrl.ifEmpty { pageTitle }.ifEmpty { context.getString(R.string.legnix) }
             }
         }
     }

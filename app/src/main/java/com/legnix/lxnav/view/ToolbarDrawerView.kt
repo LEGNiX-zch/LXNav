@@ -87,12 +87,12 @@ class ToolbarDrawerView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        // 抽屉只占左半宽
-        val halfWidth = (right - left) / 2
-        drawerContent.layout(0, 0, halfWidth, bottom - top)
+        // 抽屉占屏幕 2/3 宽
+        val drawerWidth = ((right - left) * 2 / 3).coerceAtLeast(1)
+        drawerContent.layout(0, 0, drawerWidth, bottom - top)
         scrim.layout(0, 0, right - left, bottom - top)
         if (!isOpen) {
-            drawerContent.translationX = -halfWidth.toFloat()
+            drawerContent.translationX = -drawerWidth.toFloat()
         }
     }
 

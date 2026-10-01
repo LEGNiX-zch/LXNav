@@ -7,5 +7,11 @@
     <color name="glass_text">#FFFFFFFF</color>
 
     <color name="bg_page">#FF000000</color>
-    <color name="accent">#FF5E9BFF</color>
+    <color name="accent">#FFE5E5EA</color>
+
+    <!-- 深色模式下图标用浅灰 -->
+    <color name="icon_gray">#FF8E8E93</color>
+    <color name="icon_dark">#FFE5E5EA</color>
+
+    <color name="progress_bar">#FFE5E5EA</color>
 </resources>
