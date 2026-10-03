@@ -10,6 +10,8 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.MotionEvent
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -143,22 +145,47 @@ class DynamicIslandView @JvmOverloads constructor(
             InfoMode.MEMORY -> InfoMode.PAGE
             InfoMode.PAGE -> InfoMode.TIME
         }
-        updateDisplay()
+        // 需求 5：切换内容时加入过渡动画（淡出 -> 换字 -> 淡入 + 轻微上移）
+        if (animationsEnabled) {
+            animateContentSwitch()
+        } else {
+            updateDisplay()
+        }
+    }
+
+    /** 需求 5：内容切换的平滑过渡（减缓 + 淡入淡出 + 轻微位移），受全局动画开关控制 */
+    private fun animateContentSwitch() {
+        textView.animate().cancel()
+        textView.animate()
+            .alpha(0f)
+            .translationY(-dp(6).toFloat())
+            .setDuration(180L)
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .withEndAction {
+                updateDisplay()
+                textView.translationY = dp(6).toFloat()
+                textView.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(220L)
+                    .setInterpolator(DecelerateInterpolator())
+                    .start()
+            }
+            .start()
     }
 
     private fun updateDisplay() {
-        textView.text = when (infoMode) {
-            InfoMode.TIME -> {
-                val cal = Calendar.getInstance()
-                String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
-            }
-            InfoMode.MEMORY -> {
-                "${MemInfo.getAvailableMb(context)}MB"
-            }
-            InfoMode.PAGE -> {
-                pageTitle.ifEmpty { pageUrl }.ifEmpty { context.getString(R.string.legnix) }
-            }
+        textView.text = currentText()
+    }
+
+    /** 计算当前模式应展示的文本 */
+    private fun currentText(): String = when (infoMode) {
+        InfoMode.TIME -> {
+            val cal = Calendar.getInstance()
+            String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
         }
+        InfoMode.MEMORY -> "${MemInfo.getAvailableMb(context)}MB"
+        InfoMode.PAGE -> pageTitle.ifEmpty { pageUrl }.ifEmpty { context.getString(R.string.legnix) }
     }
 
     /** 更新当前网页标题/URL（PAGE 模式下展示） */

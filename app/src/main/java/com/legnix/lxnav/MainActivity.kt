@@ -341,6 +341,15 @@ class MainActivity : AppCompatActivity() {
                 updateHomeVisibility()
             }
 
+            override fun onNewTab() {
+                // 需求 4：新建标签后回到原生主页，并刷新面板
+                closeMultiTask()
+                tabManager.newTab(HOME_URL)
+                binding.dynamicIsland.setPageInfo("", HOME_URL)
+                updateMultiTaskPanel()
+                updateHomeVisibility()
+            }
+
             override fun onDismiss() {
                 closeMultiTask()
             }

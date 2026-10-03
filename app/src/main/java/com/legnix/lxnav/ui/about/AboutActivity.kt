@@ -13,7 +13,7 @@ import com.legnix.lxnav.R
 /**
  * 关于页。
  *
- * 展示 LXNAV 简介、版本号、GitHub / QQ / 微信联系方式，以及持续迭代说明。
+ * 展示 FLENX 简介、版本号、GitHub / QQ / 微信联系方式，以及持续迭代说明。
  */
 class AboutActivity : AppCompatActivity() {
 

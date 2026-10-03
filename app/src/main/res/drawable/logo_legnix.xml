@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  需求 6：主页 Logo（亮色主题版）—— 黑色 LEGNIX 文字标识 + 导航箭头
+  需求 6：主页 Logo（亮色主题版）—— 黑色 FLENX 文字标识 + 导航箭头
   暗色主题由 drawable-night/logo_legnix.xml 提供白色版本
+  说明：对外品牌名已改为 FLENX，图形保持不变（文件名保留 logo_legnix 以兼容引用）。
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="220dp"

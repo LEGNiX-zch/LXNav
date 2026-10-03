@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.legnix.lxnav.R
 import com.legnix.lxnav.data.model.Tab
 import kotlin.math.abs
@@ -38,6 +39,8 @@ class TabStackPanel @JvmOverloads constructor(
         fun onTabSelected(tab: Tab)
         /** 用户滑走卡片，关闭对应标签 */
         fun onTabClosed(tab: Tab)
+        /** 用户点击右下角加号，新建标签 */
+        fun onNewTab()
         /** 面板被关闭（遮罩点击 / 返回键） */
         fun onDismiss()
     }
@@ -69,6 +72,11 @@ class TabStackPanel @JvmOverloads constructor(
 
     /** 拖拽起点 X，用于松手时判断关闭 */
     private var dragStarted = false
+
+    /** 需求 4：右下角新建标签按钮 */
+    private lateinit var newTabButton: FrameLayout
+
+    private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
 
     init {
         // 半透明遮罩
@@ -135,6 +143,34 @@ class TabStackPanel @JvmOverloads constructor(
             }
             true
         }
+
+        // 需求 4：右下角“新建标签”加号按钮
+        setupNewTabButton()
+    }
+
+    /** 需求 4：右下角圆形加号按钮，点击后回调 onNewTab */
+    private fun setupNewTabButton() {
+        newTabButton = FrameLayout(context).apply {
+            id = View.generateViewId()
+            background = ContextCompat.getDrawable(context, R.drawable.bg_new_tab_button)
+            val size = dp(56)
+            val lp = LayoutParams(size, size)
+            lp.gravity = android.view.Gravity.END or android.view.Gravity.BOTTOM
+            lp.setMargins(0, 0, dp(24), dp(32))
+            layoutParams = lp
+            isClickable = true
+            isFocusable = true
+            contentDescription = "新建标签"
+            addView(android.widget.ImageView(context).apply {
+                setImageResource(R.drawable.ic_new_tab)
+                val ip = LayoutParams(dp(26), dp(26))
+                ip.gravity = android.view.Gravity.CENTER
+                layoutParams = ip
+                setColorFilter(ContextCompat.getColor(context, R.color.glass_text))
+            })
+            setOnClickListener { listener?.onNewTab() }
+        }
+        addView(newTabButton)
     }
 
     private fun isPointInCard(e: MotionEvent, card: View): Boolean {
@@ -205,6 +241,8 @@ class TabStackPanel @JvmOverloads constructor(
             addView(card)
             cardViews.add(card)
         }
+        // 需求 4：确保加号按钮始终位于卡片之上
+        if (::newTabButton.isInitialized) newTabButton.bringToFront()
         visibility = if (tabs.isEmpty()) GONE else VISIBLE
     }
 

@@ -50,7 +50,7 @@
         <activity
             android:name=".ui.about.AboutActivity"
             android:exported="false"
-            android:label="关于 LXNAV" />
+            android:label="关于 FLENX" />
     </application>
 
 </manifest>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  需求 7：设置页分组标题底衬（可选，用于强调分组标题）。
+  极浅圆角，兼容明暗主题。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/transparent" />
+    <corners android:radius="8dp" />
+</shape>

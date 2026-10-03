@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- ===== 基础 ===== -->
-    <string name="app_name">LXNav</string>
-    <string name="legnix">LEGNIX</string>
+    <string name="app_name">FLENX</string>
+    <string name="legnix">FLENX</string>
     <string name="search_hint">搜索或输入网址</string>
 
     <!-- ===== 抽屉工具栏 ===== -->
-    <string name="drawer_default_nickname">LEGNIX 用户</string>
+    <string name="drawer_default_nickname">FLENX 用户</string>
     <string name="drawer_nickname_hint">点击头像可修改昵称</string>
     <string name="drawer_edit_nickname">修改昵称</string>
     <string name="drawer_nickname_title">设置昵称</string>
@@ -47,7 +47,7 @@
     <string name="settings_title">设置</string>
     <string name="settings_reward">赞赏支持</string>
     <string name="reward_title">赞赏码</string>
-    <string name="reward_desc">如果 LXNav 对你有帮助，可以扫码请作者喝杯咖啡 ☕</string>
+    <string name="reward_desc">如果 FLENX 对你有帮助，可以扫码请作者喝杯咖啡 ☕</string>
     <string name="reward_placeholder">赞赏码图片缺失</string>
     <string name="reward_close">关闭</string>
 

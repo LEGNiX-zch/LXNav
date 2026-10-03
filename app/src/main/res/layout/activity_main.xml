@@ -82,8 +82,11 @@
             android:id="@+id/logoArea"
             android:layout_width="match_parent"
             android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
             android:paddingTop="24dp"
             android:paddingBottom="8dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
             android:scaleType="fitCenter"
             android:src="@drawable/logo_legnix" />
 

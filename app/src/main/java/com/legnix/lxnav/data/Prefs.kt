@@ -36,7 +36,7 @@ object Prefs {
     private const val KEY_CUSTOM_BG_PATH = "custom_bg_path" // 需求 11：自定义背景本地路径
 
     /** 默认昵称 */
-    const val DEFAULT_NICKNAME = "LEGNIX 用户"
+    const val DEFAULT_NICKNAME = "FLENX 用户"
 
     /**
      * 需求 10：搜索引擎枚举。

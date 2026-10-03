@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:text="LXNAV"
+            android:text="FLENX"
             android:textColor="@color/glass_text"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:lineSpacingExtra="4dp"
-            android:text="LXNAV 是一款为小屏设备打造的轻量浏览器。灵动岛胶囊、液态玻璃主题、堆叠卡片多任务，在极小的屏幕上也能流畅上网。"
+            android:text="FLENX 是一款为小屏设备打造的轻量浏览器。灵动岛胶囊、液态玻璃主题、堆叠卡片多任务，在极小的屏幕上也能流畅上网。"
             android:textColor="@color/island_text"
             android:textSize="13sp" />
 
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginTop="8dp"
-            android:text="GitHub：LEGNiX-zch/LXNav"
+            android:text="GitHub：FLENX"
             android:textSize="12sp" />
 
         <Button
