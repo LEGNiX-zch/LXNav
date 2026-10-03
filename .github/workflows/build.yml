@@ -22,22 +22,43 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # 用命令行安装 Android SDK（比第三方 action 稳）
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        run: |
+          set -eu
+          mkdir -p "$HOME/android-sdk/cmdline-tools"
+          cd "$HOME/android-sdk/cmdline-tools"
+          curl -fsSL -o cmdline.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q cmdline.zip
+          mv cmdline-tools latest
+          echo "ANDROID_HOME=$HOME/android-sdk" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> "$GITHUB_ENV"
+          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Accept licenses & install SDK components
+        run: |
+          set -eu
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      # 云端无需 arm64 的 aapt2FromMavenOverride，
+      # 若仓库里的 gradle.properties 带该行会指向不存在的手机路径，这里先移除。
+      - name: Strip arm64-only aapt2 override
+        run: |
+          set -eu
+          if grep -q '^android.aapt2FromMavenOverride=' gradle.properties; then
+            grep -v '^android\.aapt2FromMavenOverride=' gradle.properties > gp.tmp
+            mv gp.tmp gradle.properties
+            echo "已移除 aapt2FromMavenOverride 行"
+          else
+            echo "无 aapt2FromMavenOverride 行，跳过"
+          fi
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace --no-daemon
-        # 云端 x86_64 环境无需 aapt2FromMavenOverride，
-        # 如本地 gradle.properties 带该属性会指向不存在的手机路径，
-        # 这里在 CI 中临时移除它（不修改仓库文件）。
-        env:
-          ORG_GRADLE_PROJECT_android.aapt2FromMavenOverride: ""
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
