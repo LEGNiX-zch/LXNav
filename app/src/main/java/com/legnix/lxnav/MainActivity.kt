@@ -293,6 +293,11 @@ class MainActivity : AppCompatActivity() {
                 Prefs.setNickname(this@MainActivity, newNickname)
             }
 
+            override fun onAvatarChanged(newPath: String) {
+                // 需求 2：抽屉内部已负责刷新头像显示，这里只做持久化
+                Prefs.setAvatarPath(this@MainActivity, newPath)
+            }
+
             override fun onDismiss() {
                 // 抽屉关闭回调（预留）
             }

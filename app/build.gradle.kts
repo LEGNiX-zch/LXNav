@@ -33,6 +33,8 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        // 关于页需要读取 BuildConfig.VERSION_NAME
+        buildConfig = true
     }
 }
 
