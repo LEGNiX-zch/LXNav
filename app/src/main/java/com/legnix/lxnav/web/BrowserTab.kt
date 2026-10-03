@@ -2,7 +2,6 @@ package com.legnix.lxnav.web
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebChromeClient
@@ -36,17 +35,12 @@ class BrowserTab(
 
     var onTitleChanged: ((String) -> Unit)? = null
     var onUrlChanged: ((String) -> Unit)? = null
-    var onProgressChanged: ((Int) -> Unit)? = null
-    var onPageStarted: (() -> Unit)? = null
-    var onPageFinished: ((Boolean) -> Unit)? = null // 参数：是否为主页
 
     init {
         setupWebView()
     }
 
     private fun setupWebView() {
-        webView.setBackgroundColor(Color.TRANSPARENT)
-
         val settings = webView.settings
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
@@ -65,7 +59,7 @@ class BrowserTab(
 
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                return false
+                return false // 不拦截，交给 WebView 自己加载
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -73,7 +67,6 @@ class BrowserTab(
                     tab.url = url
                     onUrlChanged?.invoke(url)
                 }
-                onPageStarted?.invoke()
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
@@ -87,7 +80,6 @@ class BrowserTab(
                         onTitleChanged?.invoke(newTitle)
                     }
                 }
-                onPageFinished?.invoke(isHomePage())
             }
         }
 
@@ -98,12 +90,9 @@ class BrowserTab(
                     onTitleChanged?.invoke(newTitle)
                 }
             }
-
-            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                onProgressChanged?.invoke(newProgress)
-            }
         }
 
+        // 初始尺寸
         webView.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
@@ -112,9 +101,14 @@ class BrowserTab(
 
     fun applyUa(settings: WebSettings = webView.settings) {
         settings.userAgentString = when (Prefs.uaMode) {
-            Prefs.UaMode.MOBILE -> WebSettings.getDefaultUserAgent(context)
-            Prefs.UaMode.DESKTOP ->
+            Prefs.UaMode.MOBILE -> {
+                // 保留 WebView 默认 UA（手机版）
+                WebSettings.getDefaultUserAgent(context)
+            }
+            Prefs.UaMode.DESKTOP -> {
+                // 桌面 UA
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            }
         }
     }
 
@@ -127,15 +121,27 @@ class BrowserTab(
         webView.loadUrl(targetUrl)
     }
 
-    /** 空白主页：透明背景，主页覆盖层显示原生 LEGNIX logo */
+    /** 空白主页：加载 LEGNIX 标识页 */
     fun loadHomePage() {
         tab.url = "about:blank"
-        webView.loadUrl("about:blank")
+        webView.loadData(
+            homePageHtml(),
+            "text/html",
+            "UTF-8"
+        )
     }
 
-    fun isHomePage(): Boolean {
-        val u = tab.url
-        return u.isEmpty() || u == "about:blank"
+    private fun homePageHtml(): String {
+        return """
+            <html><head><meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body{margin:0;display:flex;align-items:center;justify-content:center;
+                  height:100vh;background:transparent;font-family:sans-serif;}
+              .logo{font-size:42px;font-weight:800;letter-spacing:0.15em;color:#2D6CF6;
+                    text-shadow:0 1px 3px rgba(0,0,0,0.15);}
+            </style></head>
+            <body><div class="logo">LEGNIX</div></body></html>
+        """.trimIndent()
     }
 
     fun goBack(): Boolean {
@@ -170,10 +176,12 @@ class BrowserTab(
     }
 
     companion object {
+        /** 清除全局 WebView 缓存 */
         fun clearCache(context: Context) {
             WebView(context).clearCache(true)
         }
 
+        /** 清除全局 Cookie */
         fun clearCookies() {
             CookieManager.getInstance().removeAllCookies(null)
             CookieManager.getInstance().flush()

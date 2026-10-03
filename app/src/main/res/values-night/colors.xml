@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 液态玻璃配色（深色） -->
+    <!-- ===== 液态玻璃配色（深色，与 values/colors.xml 同源同名） ===== -->
     <color name="glass_start">#CC2A2A2E</color>
     <color name="glass_end">#801C1C1E</color>
     <color name="glass_stroke">#33FFFFFF</color>
     <color name="glass_text">#FFFFFFFF</color>
+    <color name="glass_text_hint">#8AFFFFFF</color>
 
+    <!-- ===== 页面 / 主题 ===== -->
     <color name="bg_page">#FF000000</color>
-    <color name="accent">#FFE5E5EA</color>
+    <color name="accent">#FF5E9BFF</color>
 
-    <!-- 深色模式下图标用浅灰 -->
-    <color name="icon_gray">#FF8E8E93</color>
-    <color name="icon_dark">#FFE5E5EA</color>
+    <!-- ===== 灵动岛纯黑模式 ===== -->
+    <color name="island_black">#FF000000</color>
+    <color name="island_text">#FFFFFFFF</color>
 
-    <color name="progress_bar">#FFE5E5EA</color>
+    <!-- ===== 通用 ===== -->
+    <color name="transparent">#00000000</color>
+    <color name="scrim">#80000000</color>
 </resources>

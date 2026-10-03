@@ -1,5 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ===== 基础 ===== -->
     <string name="app_name">LXNav</string>
     <string name="legnix">LEGNIX</string>
+    <string name="search_hint">搜索或输入网址</string>
+
+    <!-- ===== 抽屉工具栏 ===== -->
+    <string name="drawer_default_nickname">LEGNIX 用户</string>
+    <string name="drawer_nickname_hint">点击头像可修改昵称</string>
+    <string name="drawer_edit_nickname">修改昵称</string>
+    <string name="drawer_nickname_title">设置昵称</string>
+    <string name="drawer_nickname_confirm">确定</string>
+    <string name="drawer_nickname_cancel">取消</string>
+
+    <string name="menu_history">历史记录</string>
+    <string name="menu_downloads">下载内容</string>
+    <string name="menu_bookmarks">书签</string>
+    <string name="menu_add_bookmark">添加书签</string>
+    <string name="menu_incognito">无痕模式</string>
+    <string name="menu_night_mode">夜间模式</string>
+    <string name="menu_translate">翻译网页</string>
+    <string name="menu_offline">离线保存</string>
+
+    <string name="menu_back">后退</string>
+    <string name="menu_forward">前进</string>
+    <string name="menu_refresh">刷新</string>
+
+    <string name="menu_state_on">（已开启）</string>
+    <string name="menu_state_off">（已关闭）</string>
+
+    <!-- ===== 历史记录 ===== -->
+    <string name="history_title">历史记录</string>
+    <string name="history_empty">暂无历史记录</string>
+    <string name="history_clear">清空</string>
+    <string name="history_clear_confirm">确定清空全部历史记录吗？</string>
+    <string name="history_cleared">历史记录已清空</string>
+    <string name="history_disabled">历史记录功能已关闭</string>
+
+    <!-- ===== 书签 ===== -->
+    <string name="bookmarks_title">书签</string>
+    <string name="bookmarks_empty">暂无书签</string>
+    <string name="bookmark_added">已添加书签</string>
+    <string name="bookmark_exists">该书签已存在</string>
+
+    <!-- ===== 设置 ===== -->
+    <string name="settings_title">设置</string>
+    <string name="settings_reward">赞赏支持</string>
+    <string name="reward_title">赞赏码</string>
+    <string name="reward_desc">如果 LXNav 对你有帮助，可以扫码请作者喝杯咖啡 ☕</string>
+    <string name="reward_placeholder">赞赏码图片缺失</string>
+    <string name="reward_close">关闭</string>
+
+    <!-- ===== 通用 ===== -->
+    <string name="common_confirm">确定</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_ok">好</string>
+    <string name="common_delete">删除</string>
+    <string name="toast_incognito_on">已开启无痕模式</string>
+    <string name="toast_incognito_off">已关闭无痕模式</string>
+    <string name="toast_night_on">已开启夜间模式</string>
+    <string name="toast_night_off">已关闭夜间模式</string>
 </resources>

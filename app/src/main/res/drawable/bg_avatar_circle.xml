@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  圆形头像背景：实心浅色圆 + 细描边。
+  与 ic_avatar_placeholder 叠加形成"圆形头像"效果。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/glass_stroke" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/glass_text_hint" />
+</shape>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_liquid_glass"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reward_title"
+        android:textColor="@color/glass_text"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/reward_desc"
+        android:textColor="@color/glass_text_hint"
+        android:textSize="13sp" />
+
+    <!-- 赞赏码图片：代码动态查找 img_reward_qr（命中真实图），否则回退此占位 -->
+    <ImageView
+        android:id="@+id/imgRewardQr"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_avatar_circle"
+        android:contentDescription="@string/reward_title"
+        android:scaleType="fitCenter"
+        android:src="@drawable/img_reward_qr_placeholder" />
+
+    <TextView
+        android:id="@+id/tvRewardClose"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_drawer_menu_item"
+        android:gravity="center"
+        android:text="@string/reward_close"
+        android:textColor="@color/accent"
+        android:textSize="15sp" />
+</LinearLayout>

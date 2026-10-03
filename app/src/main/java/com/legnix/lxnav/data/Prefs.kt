@@ -5,6 +5,17 @@ import android.content.SharedPreferences
 
 /**
  * SharedPreferences 统一封装，管理所有用户设置项。
+ *
+ * 设置项：
+ * - maxTabs：最大标签数量（1/2/3/4）
+ * - theme：主题（liquid_glass / dark / light）
+ * - defaultZoom：默认网页缩放（百分比）
+ * - uaMode：UA 模式（mobile / desktop）
+ * - animationsEnabled：动画总开关
+ * - screenShapeOverride：屏幕形状覆盖（auto / square / round）
+ * - nickname：抽屉头部显示的用户昵称（可编辑）
+ * - islandPureBlack：灵动岛纯黑模式（第二阶段新增，默认开启）
+ * - historyEnabled：是否记录浏览历史（第二阶段新增）
  */
 object Prefs {
 
@@ -16,11 +27,12 @@ object Prefs {
     private const val KEY_UA_MODE = "ua_mode"
     private const val KEY_ANIMATIONS = "animations_enabled"
     private const val KEY_SCREEN_OVERRIDE = "screen_override"
-    private const val KEY_ENGINE = "search_engine"
-    private const val KEY_LIQUID_GLASS = "liquid_glass_enabled"
-    private const val KEY_BG_TYPE = "custom_bg_type"
-    private const val KEY_BG_URI = "custom_bg_uri"
-    private const val KEY_UI_MODE = "ui_mode"
+    private const val KEY_NICKNAME = "nickname"
+    private const val KEY_ISLAND_PURE_BLACK = "island_pure_black"
+    private const val KEY_HISTORY_ENABLED = "history_enabled"
+
+    /** 默认昵称 */
+    const val DEFAULT_NICKNAME = "LEGNIX 用户"
 
     enum class Theme(val key: String, val label: String) {
         LIQUID_GLASS("liquid_glass", "液态玻璃"),
@@ -37,28 +49,6 @@ object Prefs {
         AUTO("auto", "自动检测"),
         SQUARE("square", "强制方形"),
         ROUND("round", "强制圆形")
-    }
-
-    /** 搜索引擎 */
-    enum class Engine(val key: String, val label: String) {
-        BING("bing", "必应"),
-        BAIDU("baidu", "百度"),
-        SO360("so360", "360搜索"),
-        SOGOU("sogou", "搜狗"),
-        DUCKDUCKGO("duckduckgo", "DuckDuckGo")
-    }
-
-    /** 自定义背景类型 */
-    enum class BgType(val key: String, val label: String) {
-        NONE("none", "默认"),
-        IMAGE("image", "静态壁纸"),
-        VIDEO("video", "动态壁纸")
-    }
-
-    /** UI 模式：手机端 / 手表端 */
-    enum class UiMode(val key: String, val label: String) {
-        PHONE("phone", "手机模式"),
-        WATCH("watch", "手表模式")
     }
 
     private fun sp(context: Context): SharedPreferences =
@@ -82,19 +72,13 @@ object Prefs {
     var screenOverride: ScreenOverride = ScreenOverride.AUTO
         private set
 
-    var engine: Engine = Engine.BING
+    var nickname: String = DEFAULT_NICKNAME
         private set
 
-    var liquidGlassEnabled: Boolean = true
+    var islandPureBlack: Boolean = true
         private set
 
-    var bgType: BgType = BgType.NONE
-        private set
-
-    var bgUri: String = ""
-        private set
-
-    var uiMode: UiMode = UiMode.WATCH
+    var historyEnabled: Boolean = true
         private set
 
     /** 从 SharedPreferences 加载所有设置 */
@@ -109,14 +93,10 @@ object Prefs {
         animationsEnabled = sp.getBoolean(KEY_ANIMATIONS, true)
         screenOverride = ScreenOverride.entries.firstOrNull { it.key == sp.getString(KEY_SCREEN_OVERRIDE, "") }
             ?: ScreenOverride.AUTO
-        engine = Engine.entries.firstOrNull { it.key == sp.getString(KEY_ENGINE, "") }
-            ?: Engine.BING
-        liquidGlassEnabled = sp.getBoolean(KEY_LIQUID_GLASS, true)
-        bgType = BgType.entries.firstOrNull { it.key == sp.getString(KEY_BG_TYPE, "") }
-            ?: BgType.NONE
-        bgUri = sp.getString(KEY_BG_URI, "") ?: ""
-        uiMode = UiMode.entries.firstOrNull { it.key == sp.getString(KEY_UI_MODE, "") }
-            ?: UiMode.WATCH
+        nickname = sp.getString(KEY_NICKNAME, DEFAULT_NICKNAME)?.takeIf { it.isNotBlank() }
+            ?: DEFAULT_NICKNAME
+        islandPureBlack = sp.getBoolean(KEY_ISLAND_PURE_BLACK, true)
+        historyEnabled = sp.getBoolean(KEY_HISTORY_ENABLED, true)
     }
 
     fun setMaxTabs(context: Context, value: Int) {
@@ -149,27 +129,18 @@ object Prefs {
         sp(context).edit().putString(KEY_SCREEN_OVERRIDE, value.key).apply()
     }
 
-    fun setEngine(context: Context, value: Engine) {
-        engine = value
-        sp(context).edit().putString(KEY_ENGINE, value.key).apply()
+    fun setNickname(context: Context, value: String) {
+        nickname = value.ifBlank { DEFAULT_NICKNAME }
+        sp(context).edit().putString(KEY_NICKNAME, nickname).apply()
     }
 
-    fun setLiquidGlassEnabled(context: Context, value: Boolean) {
-        liquidGlassEnabled = value
-        sp(context).edit().putBoolean(KEY_LIQUID_GLASS, value).apply()
+    fun setIslandPureBlack(context: Context, value: Boolean) {
+        islandPureBlack = value
+        sp(context).edit().putBoolean(KEY_ISLAND_PURE_BLACK, value).apply()
     }
 
-    fun setBg(context: Context, type: BgType, uri: String = "") {
-        bgType = type
-        bgUri = uri
-        sp(context).edit()
-            .putString(KEY_BG_TYPE, type.key)
-            .putString(KEY_BG_URI, uri)
-            .apply()
-    }
-
-    fun setUiMode(context: Context, value: UiMode) {
-        uiMode = value
-        sp(context).edit().putString(KEY_UI_MODE, value.key).apply()
+    fun setHistoryEnabled(context: Context, value: Boolean) {
+        historyEnabled = value
+        sp(context).edit().putBoolean(KEY_HISTORY_ENABLED, value).apply()
     }
 }

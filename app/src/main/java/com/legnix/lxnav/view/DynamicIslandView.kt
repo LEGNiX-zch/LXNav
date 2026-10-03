@@ -2,6 +2,7 @@ package com.legnix.lxnav.view
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
@@ -12,16 +13,22 @@ import android.view.MotionEvent
 import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.legnix.lxnav.R
+import com.legnix.lxnav.data.Prefs
 import com.legnix.lxnav.util.MemInfo
 import java.util.Calendar
 
 /**
- * 灵动岛胶囊 View。
+ * 灵动岛胶囊 View（第二阶段增强）。
  *
  * - 单击：循环切换 时间 → 剩余内存 → 网页标题/URL
  * - 长按：播放弹性拉长 duang 动画，回调 onLongPress（由宿主弹出多任务面板）
  * - 宿主关闭多任务面板时调用 shrink()，胶囊弹性收缩回原始尺寸
+ *
+ * 新增：
+ * - 纯黑模式（Prefs.islandPureBlack 默认开启）：纯黑底 + 白字，OLED 省电。
+ * - 关闭纯黑时回退到液态玻璃胶囊背景（bg_capsule_glass）+ 深色文字。
  */
 class DynamicIslandView @JvmOverloads constructor(
     context: Context,
@@ -47,9 +54,17 @@ class DynamicIslandView @JvmOverloads constructor(
     private var pageUrl = ""
     private var listener: Listener? = null
 
+    /** 纯黑背景 drawable（复用，避免反复创建） */
+    private val blackBg: GradientDrawable by lazy {
+        GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = resources.getDimension(R.dimen.capsule_corner)
+            setColor(ContextCompat.getColor(context, R.color.island_black))
+        }
+    }
+
     private val tickRunnable = object : Runnable {
         override fun run() {
-            // 时间/内存模式下每秒刷新
             if (infoMode == InfoMode.TIME || infoMode == InfoMode.MEMORY) {
                 updateDisplay()
             }
@@ -58,26 +73,21 @@ class DynamicIslandView @JvmOverloads constructor(
     }
 
     init {
-        // 液态玻璃胶囊背景
-        setBackgroundResource(R.drawable.bg_capsule_glass)
-
         textView = TextView(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER
             )
-            setTextColor(Color.WHITE)
-            textSize = resources.getDimension(R.dimen.capsule_text_size) / resources.displayMetrics.scaledDensity
             maxLines = 1
             ellipsize = TextUtils.TruncateAt.END
-            setPadding(
-                dp(14), 0, dp(14), 0
-            )
+            setPadding(dp(14), 0, dp(14), 0)
             gravity = Gravity.CENTER
             includeFontPadding = false
         }
         addView(textView)
+
+        applyIslandStyle()
 
         gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
             override fun onDown(e: MotionEvent): Boolean = true
@@ -99,6 +109,28 @@ class DynamicIslandView @JvmOverloads constructor(
 
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
 
+    /** 根据 Prefs.islandPureBlack 应用背景与文字色 */
+    private fun applyIslandStyle() {
+        val pureBlack = Prefs.islandPureBlack
+        if (pureBlack) {
+            background = blackBg
+        } else {
+            setBackgroundResource(R.drawable.bg_capsule_glass)
+        }
+        textView.setTextColor(
+            if (pureBlack) ContextCompat.getColor(context, R.color.island_text)
+            else ContextCompat.getColor(context, R.color.glass_text)
+        )
+        textView.textSize =
+            resources.getDimension(R.dimen.capsule_text_size) / resources.displayMetrics.scaledDensity
+    }
+
+    /** 供外部（如设置页切换后 onResume）重新应用样式 */
+    fun refreshStyle() {
+        applyIslandStyle()
+        updateDisplay()
+    }
+
     private fun cycleInfo() {
         infoMode = when (infoMode) {
             InfoMode.TIME -> InfoMode.MEMORY
@@ -118,8 +150,7 @@ class DynamicIslandView @JvmOverloads constructor(
                 "${MemInfo.getAvailableMb(context)}MB"
             }
             InfoMode.PAGE -> {
-                // PAGE 模式优先显示当前网页地址
-                pageUrl.ifEmpty { pageTitle }.ifEmpty { context.getString(R.string.legnix) }
+                pageTitle.ifEmpty { pageUrl }.ifEmpty { context.getString(R.string.legnix) }
             }
         }
     }

@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ===== 应用主题 ===== -->
     <style name="Theme.LXNav" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/bg_page</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
+        <!-- 支持 windowLightStatusBar 在深色下自动切换（由 values-night 覆盖） -->
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- ===== 抽屉菜单项文字样式 ===== -->
+    <style name="DrawerMenuItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/drawer_menu_item_height</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/drawer_padding_h</item>
+        <item name="android:paddingEnd">@dimen/drawer_padding_h</item>
+        <item name="android:textSize">@dimen/drawer_menu_item_text_size</item>
+        <item name="android:textColor">@color/glass_text</item>
+        <item name="android:background">@drawable/bg_drawer_menu_item</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 </resources>

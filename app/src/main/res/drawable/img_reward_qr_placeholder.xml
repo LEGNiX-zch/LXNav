@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="220dp"
+    android:height="220dp"
+    android:viewportWidth="220"
+    android:viewportHeight="220">
+
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#33888888"
+        android:strokeWidth="2"
+        android:pathData="M6,6 L214,6 L214,214 L6,214 Z" />
+
+    <!-- 简易二维码示意格 -->
+    <group>
+        <path android:fillColor="#66888888" android:pathData="M20,20 h40 v40 h-40 Z" />
+        <path android:fillColor="#66888888" android:pathData="M160,20 h40 v40 h-40 Z" />
+        <path android:fillColor="#66888888" android:pathData="M20,160 h40 v40 h-40 Z" />
+    </group>
+
+    <path
+        android:fillColor="#66888888"
+        android:pathData="M90,20 h20 v20 h-20 Z M120,20 h20 v20 h-20 Z M90,50 h20 v20 h-20 Z M120,50 h20 v20 h-20 Z M90,90 h20 v20 h-20 Z M120,90 h20 v20 h-20 Z M160,90 h20 v20 h-20 Z M20,90 h20 v20 h-20 Z M50,90 h20 v20 h-20 Z M90,120 h20 v20 h-20 Z M120,120 h20 v20 h-20 Z M160,120 h20 v20 h-20 Z M90,160 h20 v20 h-20 Z M120,160 h20 v20 h-20 Z M90,190 h20 v20 h-20 Z M160,160 h20 v20 h-20 Z M190,190 h10 v10 h-10 Z" />
+</vector>

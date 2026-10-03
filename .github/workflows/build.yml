@@ -1,0 +1,47 @@
+name: Build LXNav APK
+
+# 云端构建：GitHub Actions runner 是 x86_64 Linux，
+# 自带可用的 aapt2，天然避开手机 arm64 的 aapt2 架构问题。
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
+        # 云端 x86_64 环境无需 aapt2FromMavenOverride，
+        # 如本地 gradle.properties 带该属性会指向不存在的手机路径，
+        # 这里在 CI 中临时移除它（不修改仓库文件）。
+        env:
+          ORG_GRADLE_PROJECT_android.aapt2FromMavenOverride: ""
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lxnav-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

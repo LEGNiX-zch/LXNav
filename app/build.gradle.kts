@@ -38,7 +38,9 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    // appcompat 1.6.1 与 compileSdk 34 稳定匹配；
+    // 1.7.0 要求 compileSdk 35，在 arm64 环境易引发资源合并告警/失败。
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.vectordrawable:vectordrawable:1.1.0")

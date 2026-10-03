@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  抽屉菜单项点击涟漪背景。
+  透明底 + 圆角水波纹，保持液态玻璃上的轻盈触感。
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/glass_stroke">
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/transparent" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+</ripple>

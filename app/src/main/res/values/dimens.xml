@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ===== 灵动岛胶囊 ===== -->
     <dimen name="capsule_corner">999dp</dimen>
     <dimen name="capsule_height">30dp</dimen>
     <dimen name="capsule_horizontal_padding">14dp</dimen>
     <dimen name="capsule_text_size">12sp</dimen>
+
+    <!-- ===== 抽屉工具栏 ===== -->
+    <dimen name="drawer_width">280dp</dimen>
+    <dimen name="drawer_avatar_size">64dp</dimen>
+    <dimen name="drawer_menu_item_height">48dp</dimen>
+    <dimen name="drawer_menu_item_text_size">15sp</dimen>
+    <dimen name="drawer_padding_h">20dp</dimen>
+    <dimen name="drawer_menu_icon_size">22dp</dimen>
 </resources>

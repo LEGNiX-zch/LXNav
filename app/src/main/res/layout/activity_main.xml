@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  主布局（重构版）：
-  - 背景壁纸层（自定义图片/视频）
-  - WebView 容器（底层，全屏）
-  - 主页覆盖层：中上搜索框 + 正下方 LEGNIX logo（仅主页显示）
-  - 顶部栏：灵动岛最顶部居中；菜单/设置按钮向下偏移，不与灵动岛同水平线
-  - 顶部细进度条
-  - 底部液态玻璃导航条（仅浏览网页时显示）
+  主布局（阶段四）：
+  - 顶部行：左上角菜单 | 灵动岛胶囊 | 右上角设置
+  - 搜索栏
+  - WebView 容器（主体区域）
+  - LEGNIX 空白主页由 WebView 加载
   - 覆盖层：抽屉工具栏、多任务面板
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,119 +12,67 @@
     android:layout_height="match_parent"
     android:background="@color/bg_page">
 
-    <!-- 自定义背景壁纸层（图片） -->
-    <ImageView
-        android:id="@+id/bgImage"
+    <!-- 主内容区（竖向排列） -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:visibility="gone"
-        android:contentDescription="@null" />
+        android:orientation="vertical">
 
-    <!-- WebView 容器（底层全屏） -->
-    <FrameLayout
-        android:id="@+id/webContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <!-- 主页覆盖层：搜索框 + LEGNIX logo（仅主页显示） -->
-    <FrameLayout
-        android:id="@+id/homeOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+        <!-- 顶部行 -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="-40dp">
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
 
-            <!-- 长条形搜索框 -->
-            <com.legnix.lxnav.view.SearchBarView
-                android:id="@+id/searchBar"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp" />
-
-            <!-- LEGNIX 品牌 logo（搜索框正下方，水平居中） -->
-            <TextView
-                android:id="@+id/legnixLogo"
+            <!-- 灵动岛胶囊 -->
+            <com.legnix.lxnav.view.DynamicIslandView
+                android:id="@+id/dynamicIsland"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:text="@string/legnix"
-                android:textSize="34sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.18"
-                android:textColor="@color/icon_dark"
-                android:includeFontPadding="false" />
-        </LinearLayout>
-    </FrameLayout>
+                android:layout_height="@dimen/capsule_height"
+                android:layout_gravity="center"
+                android:minWidth="100dp" />
 
-    <!-- 顶部细进度条 -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_gravity="top"
-        android:max="100"
-        android:progress="0"
-        android:progressTint="@color/progress_bar"
-        android:progressBackgroundTint="@android:color/transparent"
-        android:visibility="gone" />
+            <!-- 左上角菜单按钮 -->
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="6dp"
+                android:src="@drawable/ic_menu"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@null" />
 
-    <!-- 顶部栏：灵动岛 + 菜单 + 设置 -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:paddingTop="6dp">
+            <!-- 右上角设置按钮 -->
+            <ImageButton
+                android:id="@+id/btnSettings"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/ic_settings"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@null" />
+        </FrameLayout>
 
-        <!-- 灵动岛：页面最上方居中 -->
-        <com.legnix.lxnav.view.DynamicIslandView
-            android:id="@+id/dynamicIsland"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/capsule_height"
-            android:layout_gravity="top|center_horizontal"
-            android:minWidth="100dp" />
-
-        <!-- 左上角工具箱按钮：向下偏移，不与灵动岛同水平线 -->
-        <ImageButton
-            android:id="@+id/btnMenu"
-            android:layout_width="36dp"
+        <!-- 搜索栏 -->
+        <com.legnix.lxnav.view.SearchBarView
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:layout_gravity="top|start"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="44dp"
-            android:src="@drawable/ic_menu"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@null" />
-
-        <!-- 右上角设置图标：向下偏移，不与灵动岛同水平线 -->
-        <ImageButton
-            android:id="@+id/btnSettings"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="top|end"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="44dp"
-            android:src="@drawable/ic_settings"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@null" />
-    </FrameLayout>
+            android:layout_marginBottom="4dp" />
 
-    <!-- 底部液态玻璃悬浮导航条（浏览网页时显示，主页隐藏） -->
-    <com.legnix.lxnav.view.BottomNavView
-        android:id="@+id/bottomNav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="14dp"
-        android:visibility="gone" />
+        <!-- WebView 容器 -->
+        <FrameLayout
+            android:id="@+id/webContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <!-- 左侧抽屉工具栏（默认隐藏） -->
     <com.legnix.lxnav.view.ToolbarDrawerView

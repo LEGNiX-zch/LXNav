@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  头像占位图：一个简单的"人形"矢量图标。
+  用户后续可把真实头像替换为 drawable/ic_avatar.png（同名）。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- 头部圆 -->
+    <path
+        android:fillColor="@color/glass_text_hint"
+        android:pathData="M12,12m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+    <!-- 身体半圆 -->
+    <path
+        android:fillColor="@color/glass_text_hint"
+        android:pathData="M12,14c-4.42,0 -8,2.24 -8,5v1h16v-1c0,-2.76 -3.58,-5 -8,-5z" />
+</vector>

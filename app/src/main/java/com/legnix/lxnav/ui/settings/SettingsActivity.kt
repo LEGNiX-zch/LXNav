@@ -2,8 +2,10 @@ package com.legnix.lxnav.ui.settings
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.legnix.lxnav.R
 import com.legnix.lxnav.data.Prefs
@@ -38,6 +40,7 @@ class SettingsActivity : AppCompatActivity() {
         setupAnimations()
         setupScreenOverride()
         setupClearButtons()
+        setupReward()
     }
 
     private fun setupMaxTabs() {
@@ -128,6 +131,43 @@ class SettingsActivity : AppCompatActivity() {
             BrowserTab.clearCookies()
             Toast.makeText(this, "Cookie已清除", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setupReward() {
+        findViewById<Button>(R.id.btnReward).setOnClickListener {
+            showRewardDialog()
+        }
+    }
+
+    /**
+     * 显示赞赏码弹窗。
+     *
+     * 赞赏码图片用不含扩展名的资源名动态查找：
+     * - 命中真实图片（img_reward_qr，png/jpg/webp 均可）→ 直接显示；
+     * - 未放入 → 回退到矢量占位图 img_reward_qr_placeholder。
+     * 这样用户重建后把图片丢进 drawable 即可，无需改代码。
+     */
+    private fun showRewardDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_reward, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .setCancelable(true)
+            .create()
+
+        val img = view.findViewById<ImageView>(R.id.imgRewardQr)
+        val resId = resources.getIdentifier(
+            "img_reward_qr", "drawable", packageName
+        )
+        if (resId != 0) {
+            img.setImageResource(resId)
+        } else {
+            img.setImageResource(R.drawable.img_reward_qr_placeholder)
+        }
+
+        view.findViewById<TextView>(R.id.tvRewardClose).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     /**

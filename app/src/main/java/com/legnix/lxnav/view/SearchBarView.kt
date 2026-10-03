@@ -10,13 +10,13 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.legnix.lxnav.R
-import com.legnix.lxnav.util.SearchEngine
 
 /**
  * 搜索栏：输入网址或搜索词，右侧搜索图标。
  *
- * - 点击搜索框或键盘回车 → 触发搜索
- * - URL 直接加载，关键词走 Prefs.engine 选定的搜索引擎
+ * - 输入 URL（含 .） → 直接加载
+ * - 输入搜索词 → 走搜索引擎（默认百度）
+ * - 搜索图标点击 / 键盘确认 → 触发加载
  */
 class SearchBarView @JvmOverloads constructor(
     context: Context,
@@ -30,7 +30,7 @@ class SearchBarView @JvmOverloads constructor(
 
     init {
         setBackgroundResource(R.drawable.bg_capsule_glass)
-        val padding = (12 * resources.displayMetrics.density).toInt()
+        val padding = (10 * resources.displayMetrics.density).toInt()
 
         val row = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -43,14 +43,14 @@ class SearchBarView @JvmOverloads constructor(
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             background = null
             hint = "搜索或输入网址"
-            setTextColor(Color.parseColor("#FF1A1A1A"))
-            setHintTextColor(Color.parseColor("#8A8A8A8A"))
+            setTextColor(Color.WHITE)
+            setHintTextColor(Color.parseColor("#80FFFFFF"))
             textSize = 12f
             isSingleLine = true
-            imeOptions = EditorInfo.IME_ACTION_GO or EditorInfo.IME_ACTION_SEARCH
+            imeOptions = EditorInfo.IME_ACTION_GO
             inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_URI
             setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
                     triggerSearch()
                     true
                 } else false
@@ -59,9 +59,10 @@ class SearchBarView @JvmOverloads constructor(
 
         val searchIcon = ImageView(context).apply {
             setImageResource(R.drawable.ic_search)
+            setColorFilter(Color.WHITE)
             layoutParams = LinearLayout.LayoutParams(
-                (22 * resources.displayMetrics.density).toInt(),
-                (22 * resources.displayMetrics.density).toInt()
+                (24 * resources.displayMetrics.density).toInt(),
+                (24 * resources.displayMetrics.density).toInt()
             )
             setOnClickListener { triggerSearch() }
         }
@@ -74,9 +75,20 @@ class SearchBarView @JvmOverloads constructor(
     private fun triggerSearch() {
         val input = editText.text.toString().trim()
         if (input.isEmpty()) return
-        val url = SearchEngine.toUrl(input)
+        val url = toUrl(input)
         onSearch?.invoke(url)
         editText.text.clear()
+    }
+
+    /** 将用户输入转换为 URL */
+    private fun toUrl(input: String): String {
+        // 包含 :// 或以 . 开头(含域名特征) → 当 URL
+        return if (input.contains("://") || (input.contains(".") && !input.contains(" "))) {
+            if (input.startsWith("http")) input else "https://$input"
+        } else {
+            // 搜索词 → 百度搜索
+            "https://www.baidu.com/s?wd=" + java.net.URLEncoder.encode(input, "UTF-8")
+        }
     }
 
     fun setText(text: String) {
