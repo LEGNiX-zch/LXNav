@@ -5,10 +5,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.legnix.lxnav.R
 import com.legnix.lxnav.data.Prefs
+import com.legnix.lxnav.util.ImageUtils
 import com.legnix.lxnav.web.BrowserTab
 
 /**
@@ -27,6 +29,21 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var tvZoom: TextView
 
+    /** 需求 11：背景图选择器 */
+    private val bgPicker = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            val path = ImageUtils.saveCustomBackground(this, uri)
+            if (path != null) {
+                Prefs.setCustomBgPath(this, path)
+                Toast.makeText(this, "背景已更新", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "背景设置失败", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -39,8 +56,11 @@ class SettingsActivity : AppCompatActivity() {
         setupUa()
         setupAnimations()
         setupScreenOverride()
+        setupSearchEngine()
+        setupBackground()
         setupClearButtons()
         setupReward()
+        setupAbout()
     }
 
     private fun setupMaxTabs() {
@@ -122,7 +142,42 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupClearButtons() {
+    /** 需求 10：搜索引擎选择 */
+    private fun setupSearchEngine() {
+        val current = Prefs.searchEngine
+        val buttons = listOf(
+            findViewById<Button>(R.id.btnEngineBaidu) to Prefs.SearchEngine.BAIDU,
+            findViewById<Button>(R.id.btnEngineBing) to Prefs.SearchEngine.BING,
+            findViewById<Button>(R.id.btnEngineSogou) to Prefs.SearchEngine.SOGOU
+        )
+        updateSelectedButtons(buttons, current.key) { (btn, value) ->
+            Prefs.setSearchEngine(this, value)
+            updateSelectedButtons(buttons, value.key) {}
+            Toast.makeText(this, "搜索引擎：${value.label}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /** 需求 11：自定义主页背景选择 / 清除 */
+    private fun setupBackground() {
+        findViewById<Button>(R.id.btnPickBackground).setOnClickListener {
+            bgPicker.launch("image/*")
+        }
+        findViewById<Button>(R.id.btnClearBackground).setOnClickListener {
+            Prefs.setCustomBgPath(this, "")
+            Toast.makeText(this, "背景已清除", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /** 关于页入口 */
+    private fun setupAbout() {
+        findViewById<Button>(R.id.btnAbout).setOnClickListener {
+            startActivity(
+                android.content.Intent(this, com.legnix.lxnav.ui.about.AboutActivity::class.java)
+            )
+        }
+    }
+
+private fun setupClearButtons() {
         findViewById<Button>(R.id.btnClearCache).setOnClickListener {
             BrowserTab.clearCache(this)
             Toast.makeText(this, "缓存已清除", Toast.LENGTH_SHORT).show()
@@ -184,6 +239,7 @@ class SettingsActivity : AppCompatActivity() {
                 is Prefs.Theme -> value.key
                 is Prefs.UaMode -> value.key
                 is Prefs.ScreenOverride -> value.key
+                is Prefs.SearchEngine -> value.key
                 else -> value.toString()
             }
             val isSelected = valueKey == selectedKey

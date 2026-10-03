@@ -18,6 +18,7 @@ import com.legnix.lxnav.ui.settings.SettingsActivity
 import com.legnix.lxnav.view.DynamicIslandView
 import com.legnix.lxnav.view.TabStackPanel
 import com.legnix.lxnav.view.ToolbarDrawerView
+import com.legnix.lxnav.web.BrowserTab
 import com.legnix.lxnav.web.TabManager
 
 /**
@@ -68,6 +69,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /** 需求 2：系统图片选择器（选择抽屉头像） */
+    private val avatarPicker = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            binding.toolbarDrawer.onAvatarPicked(uri, this)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Prefs.load(this)
@@ -85,13 +95,23 @@ class MainActivity : AppCompatActivity() {
         setupSettingsButton()
         setupTabStackPanel()
 
+        // 需求 2：把图片选择器注入抽屉
+        binding.toolbarDrawer.avatarPickerLauncher = avatarPicker
+
         // 抽屉昵称/开关与 Prefs 同步
         binding.toolbarDrawer.setNickname(Prefs.nickname)
         binding.toolbarDrawer.syncToggles(incognito, isNightModeOn())
 
-        // 启动时创建第一个标签（空白主页）
-        tabManager.newTab(null)
+        // 需求 12：冷启动不自动创建 about:blank 空白标签、不弹多任务预览，
+        // 直接加载原生主页（灵动岛 + 搜索框 + Logo + 自定义背景）。
+        binding.dynamicIsland.setPageInfo("", HOME_URL)
         updateMultiTaskPanel()
+        updateHomeVisibility()
+    }
+
+    companion object {
+        /** 需求 12：应用内主页标识，非 about:blank，用于区分原生主页 */
+        const val HOME_URL = "lxnav://home"
     }
 
     /** 依据 Prefs.theme 应用深/浅色模式（第二阶段：深色模式生效） */
@@ -117,6 +137,38 @@ class MainActivity : AppCompatActivity() {
         binding.toolbarDrawer.animationsEnabled = enabled
     }
 
+    /**
+     * 需求 11：应用自定义主页背景。
+     * 若已选择背景图且文件存在，则把图片设置到根布局；否则恢复默认背景色。
+     * 背景仅在原生主页（无网页标签占满内容区）时可见。
+     */
+    private fun applyCustomBackground() {
+        val path = Prefs.customBgPath
+        val file = java.io.File(path)
+        if (path.isNotBlank() && file.exists()) {
+            try {
+                val bmp = android.graphics.BitmapFactory.decodeFile(path)
+                if (bmp != null) {
+                    binding.rootView.setBackground(
+                        android.graphics.drawable.BitmapDrawable(resources, bmp)
+                    )
+                    return
+                }
+            } catch (e: Exception) {
+                // 解码失败则回退默认背景
+            }
+        }
+        binding.rootView.setBackgroundResource(R.color.bg_page)
+    }
+
+    /** 需求 6：Logo 与搜索栏仅在原生主页（无标签或标签为原生主页）时展示 */
+    private fun updateHomeVisibility() {
+        val isHome = tabManager.currentTab == null ||
+                tabManager.currentTab?.url.isNullOrBlank() ||
+                tabManager.currentTab?.url == HOME_URL
+        binding.logoArea.visibility = if (isHome) View.VISIBLE else View.GONE
+    }
+
     private fun setupDynamicIsland() {
         binding.dynamicIsland.setListener(object : DynamicIslandView.Listener {
             override fun onLongPress() {
@@ -126,15 +178,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupSearchBar() {
-        binding.searchBar.onSearch = { url ->
-            loadInCurrentTab(url)
+        binding.searchBar.onSearch = { input ->
+            // 需求 10：网址直访；关键词用当前选中的搜索引擎
+            loadInCurrentTab(input)
         }
     }
 
     /** 加载 URL，并在历史开启时记录；无痕模式下不记录 */
     private fun loadInCurrentTab(url: String) {
-        tabManager.currentTab?.loadUrl(url)
+        // 需求 12：懒创建 —— 首个真实加载时才建立 WebView 标签，
+        // 冷启动停留在原生主页不会产生 about:blank 标签。
+        tabManager.ensureCurrentTab().loadUrl(url)
         binding.dynamicIsland.setPageInfo("", url)
+        updateHomeVisibility()
         if (!incognito && Prefs.historyEnabled) {
             HistoryStore.add(this, url, url)
         }
@@ -272,10 +328,12 @@ class MainActivity : AppCompatActivity() {
             override fun onTabClosed(tab: com.legnix.lxnav.data.model.Tab) {
                 tabManager.closeTab(tab.id)
                 if (tabManager.tabCount == 0) {
+                    // 需求 12：关闭最后一个标签后回到原生主页，不建 about:blank 标签
                     closeMultiTask()
-                    tabManager.newTab(null)
+                    binding.dynamicIsland.setPageInfo("", HOME_URL)
                 }
                 updateMultiTaskPanel()
+                updateHomeVisibility()
             }
 
             override fun onDismiss() {
@@ -333,8 +391,12 @@ class MainActivity : AppCompatActivity() {
         applyAnimationSetting()
         applyThemeFromPrefs()
         binding.dynamicIsland.refreshStyle()
+        binding.searchBar.refreshTextColor()
+        applyCustomBackground()
+        binding.toolbarDrawer.refreshAvatar()
         binding.toolbarDrawer.setNickname(Prefs.nickname)
         binding.toolbarDrawer.syncToggles(incognito, isNightModeOn())
+        updateHomeVisibility()
 
         tabManager.currentTab?.applyUa()
         tabManager.currentTab?.applyZoom()

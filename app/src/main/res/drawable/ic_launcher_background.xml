@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 需求 7：启动图标背景层（深黑→深蓝渐变，衬托蓝色导航箭头） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="#FF0A0E1A"
+        android:endColor="#FF11172A"
+        android:angle="270" />
+</shape>

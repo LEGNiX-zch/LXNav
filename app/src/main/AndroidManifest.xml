@@ -15,14 +15,21 @@
         android:theme="@style/Theme.LXNav">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize">
+            android:theme="@style/Theme.LXNav.Splash"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize">
         </activity>
 
         <activity
@@ -39,6 +46,11 @@
             android:name=".ui.history.HistoryActivity"
             android:exported="false"
             android:label="@string/history_title" />
+
+        <activity
+            android:name=".ui.about.AboutActivity"
+            android:exported="false"
+            android:label="关于 LXNAV" />
     </application>
 
 </manifest>

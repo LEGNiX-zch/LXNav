@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  需求 6：主页 Logo（亮色主题版）—— 黑色 LEGNIX 文字标识 + 导航箭头
+  暗色主题由 drawable-night/logo_legnix.xml 提供白色版本
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="220dp"
+    android:height="64dp"
+    android:viewportWidth="220"
+    android:viewportHeight="64">
+
+    <!-- 导航箭头（品牌图形），主色深黑 -->
+    <path
+        android:fillColor="#FF111111"
+        android:pathData="M40,14 L54,44 L40,36 L26,44 Z" />
+
+    <!-- LEGNIX 文字（用粗描边近似字形，避免依赖字体） -->
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M66,20 V44 M66,20 H92 M66,32 H86" />
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M102,20 V44 H128" />
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M138,20 V44 M138,20 H164 M138,32 H160 M138,44 H164" />
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M174,20 V44 M174,20 L188,44 M188,20 V44" />
+    <path
+        android:strokeColor="#FF111111"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M198,20 L208,32 L198,44 M208,20 L198,32 L208,44" />
+</vector>

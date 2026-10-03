@@ -8,6 +8,7 @@
   - 覆盖层：抽屉工具栏、多任务面板
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_page">
@@ -20,6 +21,7 @@
 
         <!-- 顶部行 -->
         <FrameLayout
+            android:id="@+id/topRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="6dp"
@@ -33,24 +35,29 @@
                 android:layout_gravity="center"
                 android:minWidth="100dp" />
 
-            <!-- 左上角菜单按钮 -->
+            <!--
+              需求 3：左上角菜单按钮 —— 下移约「灵动岛一半高度」，
+              使其在竖直方向中心与胶囊中心错半格，展开多任务时不遮挡。
+            -->
             <ImageButton
                 android:id="@+id/btnMenu"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="start|center_vertical"
                 android:layout_marginStart="6dp"
+                android:layout_marginTop="@dimen/btn_offset_half_island"
                 android:src="@drawable/ic_menu"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@null" />
 
-            <!-- 右上角设置按钮 -->
+            <!-- 需求 3：右上角设置按钮 —— 同上，下移约半个灵动岛高度 -->
             <ImageButton
                 android:id="@+id/btnSettings"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="6dp"
+                android:layout_marginTop="@dimen/btn_offset_half_island"
                 android:src="@drawable/ic_settings"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@null" />
@@ -64,6 +71,21 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp" />
+
+        <!--
+          需求 6：搜索栏下 Logo 区
+          - 亮色主题：白底黑 Logo（logo_day）
+          - 暗色主题：黑底白 Logo（logo_night）
+          - 仅原生主页（无 WebView 标签）时展示，加载网页后由代码隐藏
+        -->
+        <ImageView
+            android:id="@+id/logoArea"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/logo_legnix" />
 
         <!-- WebView 容器 -->
         <FrameLayout

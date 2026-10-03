@@ -267,5 +267,87 @@
             android:text="@string/settings_reward"
             android:textSize="13sp" />
 
+        <!-- 需求 10：搜索引擎 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="搜索引擎"
+            android:textColor="@color/glass_text"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btnEngineBaidu"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="百度"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnEngineSogou"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="搜狗"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnEngineBing"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="必应"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- 需求 11：自定义主页背景 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主页背景"
+            android:textColor="@color/glass_text"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btnPickBackground"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="选择背景图"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnClearBackground"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="清除背景"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- 关于 -->
+        <Button
+            android:id="@+id/btnAbout"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="16dp"
+            android:text="关于"
+            android:textSize="13sp" />
+
     </LinearLayout>
 </ScrollView>

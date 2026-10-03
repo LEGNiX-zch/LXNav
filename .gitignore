@@ -32,3 +32,6 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# IDE symbol cache
+.acside/

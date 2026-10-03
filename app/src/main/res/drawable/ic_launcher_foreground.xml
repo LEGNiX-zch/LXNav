@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 启动图标前景：LEGNIX 文字标识（无 LX 图形 LOGO） -->
+<!--
+  需求 7：优化 APP 图标
+  - 自适应图标前景层（108x108，安全区约 66dp 居中）
+  - 图形：LEGNIX 导航箭头 + 字母 "L" 组合，主色 #2D6CF6
+  - 背景层由 mipmap-anydpi-v26/ic_launcher.xml 提供（深黑渐变）
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+
+    <!-- 外圈导航环：上半弧（象征 compass / 导航） -->
+    <path
+        android:strokeColor="#FF2D6CF6"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M34,54 a20,20 0 0 1 40,0" />
+
+    <!-- 导航指针：向上的箭头（罗盘针） -->
     <path
         android:fillColor="#FF2D6CF6"
-        android:pathData="M0,0h108v108h-108z" />
+        android:pathData="M54,34 L63,56 L54,50 L45,56 Z" />
+
+    <!-- 字母 L（品牌首字母），位于下半，白色 -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M45,60 h6 v14 h11 v5 h-17 z" />
 </vector>

@@ -6,6 +6,9 @@
     <dimen name="capsule_horizontal_padding">14dp</dimen>
     <dimen name="capsule_text_size">12sp</dimen>
 
+    <!-- 需求 3：菜单/设置按钮下移量 ≈ 灵动岛一半高度（capsule_height 30dp / 2） -->
+    <dimen name="btn_offset_half_island">15dp</dimen>
+
     <!-- ===== 抽屉工具栏 ===== -->
     <dimen name="drawer_width">280dp</dimen>
     <dimen name="drawer_avatar_size">64dp</dimen>

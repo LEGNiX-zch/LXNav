@@ -30,9 +30,24 @@ object Prefs {
     private const val KEY_NICKNAME = "nickname"
     private const val KEY_ISLAND_PURE_BLACK = "island_pure_black"
     private const val KEY_HISTORY_ENABLED = "history_enabled"
+    // ===== 新增（本轮功能迭代） =====
+    private const val KEY_AVATAR_PATH = "avatar_path"       // 需求 2：自定义头像本地路径
+    private const val KEY_SEARCH_ENGINE = "search_engine"   // 需求 10：搜索引擎
+    private const val KEY_CUSTOM_BG_PATH = "custom_bg_path" // 需求 11：自定义背景本地路径
 
     /** 默认昵称 */
     const val DEFAULT_NICKNAME = "LEGNIX 用户"
+
+    /**
+     * 需求 10：搜索引擎枚举。
+     * queryUrl 为关键词搜索地址前缀，用户输入的关键词会 URL 编码后拼接其后。
+     */
+    enum class SearchEngine(val key: String, val label: String, val queryUrl: String) {
+        BAIDU("baidu", "百度", "https://www.baidu.com/s?wd="),
+        BING("bing", "必应", "https://cn.bing.com/search?q="),
+        SO360("so360", "360", "https://www.so.com/s?q="),
+        SOGOU("sogou", "搜狗", "https://www.sogou.com/web?query=")
+    }
 
     enum class Theme(val key: String, val label: String) {
         LIQUID_GLASS("liquid_glass", "液态玻璃"),
@@ -81,6 +96,19 @@ object Prefs {
     var historyEnabled: Boolean = true
         private set
 
+    // ===== 新增（本轮功能迭代） =====
+    /** 需求 2：自定义头像本地文件路径（空 = 使用默认占位图） */
+    var avatarPath: String = ""
+        private set
+
+    /** 需求 10：当前搜索引擎（默认百度） */
+    var searchEngine: SearchEngine = SearchEngine.BAIDU
+        private set
+
+    /** 需求 11：自定义主页背景本地文件路径（空 = 不使用自定义背景） */
+    var customBgPath: String = ""
+        private set
+
     /** 从 SharedPreferences 加载所有设置 */
     fun load(context: Context) {
         val sp = sp(context)
@@ -97,6 +125,11 @@ object Prefs {
             ?: DEFAULT_NICKNAME
         islandPureBlack = sp.getBoolean(KEY_ISLAND_PURE_BLACK, true)
         historyEnabled = sp.getBoolean(KEY_HISTORY_ENABLED, true)
+        // ===== 新增（本轮功能迭代） =====
+        avatarPath = sp.getString(KEY_AVATAR_PATH, "") ?: ""
+        searchEngine = SearchEngine.entries.firstOrNull { it.key == sp.getString(KEY_SEARCH_ENGINE, "") }
+            ?: SearchEngine.BAIDU
+        customBgPath = sp.getString(KEY_CUSTOM_BG_PATH, "") ?: ""
     }
 
     fun setMaxTabs(context: Context, value: Int) {
@@ -142,5 +175,24 @@ object Prefs {
     fun setHistoryEnabled(context: Context, value: Boolean) {
         historyEnabled = value
         sp(context).edit().putBoolean(KEY_HISTORY_ENABLED, value).apply()
+    }
+
+    // ===== 新增（本轮功能迭代） =====
+    /** 需求 2：设置自定义头像路径（空字符串 = 清除，恢复默认占位图） */
+    fun setAvatarPath(context: Context, value: String) {
+        avatarPath = value
+        sp(context).edit().putString(KEY_AVATAR_PATH, value).apply()
+    }
+
+    /** 需求 10：设置当前搜索引擎 */
+    fun setSearchEngine(context: Context, value: SearchEngine) {
+        searchEngine = value
+        sp(context).edit().putString(KEY_SEARCH_ENGINE, value.key).apply()
+    }
+
+    /** 需求 11：设置自定义主页背景路径（空字符串 = 清除） */
+    fun setCustomBgPath(context: Context, value: String) {
+        customBgPath = value
+        sp(context).edit().putString(KEY_CUSTOM_BG_PATH, value).apply()
     }
 }

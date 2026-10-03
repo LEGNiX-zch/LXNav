@@ -3,6 +3,7 @@ package com.legnix.lxnav.view
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -10,8 +11,10 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
 import com.legnix.lxnav.R
 import com.legnix.lxnav.data.Prefs
+import com.legnix.lxnav.util.ImageUtils
 
 /**
  * 左侧抽屉式工具栏（第二阶段重构版）。
@@ -44,6 +47,8 @@ class ToolbarDrawerView @JvmOverloads constructor(
         fun onOffline()
         /** 昵称被编辑提交 */
         fun onNicknameChanged(newNickname: String)
+        /** 需求 2：头像被重新选择（返回新的本地路径） */
+        fun onAvatarChanged(newPath: String)
         fun onDismiss()
     }
 
@@ -56,8 +61,12 @@ class ToolbarDrawerView @JvmOverloads constructor(
     private var isOpen = false
 
     private lateinit var tvNickname: TextView
+    private lateinit var imgAvatar: ImageView
     private lateinit var menuNightMode: TextView
     private lateinit var menuIncognito: TextView
+
+    /** 需求 2：由宿主 Activity 注入的图片选择器（避免在自定义 View 内 getActivity） */
+    var avatarPickerLauncher: ActivityResultLauncher<String>? = null
 
     /** 各开关的本地状态，仅在界面内维护视觉，真正的持久化交给外部 listener */
     private var incognitoOn = false
@@ -87,11 +96,26 @@ class ToolbarDrawerView @JvmOverloads constructor(
 
     private fun bindViews() {
         tvNickname = drawerContent.findViewById(R.id.tvNickname)
+        imgAvatar = drawerContent.findViewById(R.id.imgAvatar)
         menuNightMode = drawerContent.findViewById(R.id.menuNightMode)
         menuIncognito = drawerContent.findViewById(R.id.menuIncognito)
 
-        // 头像占位（第二阶段用字母占位图，用户后续可替换为真实头像）
-        drawerContent.findViewById<ImageView>(R.id.imgAvatar).setImageResource(R.drawable.ic_avatar_placeholder)
+        // 需求 2：若有自定义头像则显示，否则显示默认占位图
+        ImageUtils.applyAvatar(imgAvatar, Prefs.avatarPath, R.drawable.ic_avatar_placeholder)
+    }
+
+    /** 需求 2：刷新头像显示（外部设置后调用） */
+    fun refreshAvatar() {
+        ImageUtils.applyAvatar(imgAvatar, Prefs.avatarPath, R.drawable.ic_avatar_placeholder)
+    }
+
+    /** 需求 2：头像被 Activity 选择器回调后写入本地缓存并刷新界面 */
+    fun onAvatarPicked(uri: Uri, hostContext: Context) {
+        val path = ImageUtils.saveRoundAvatar(hostContext, uri)
+        if (path != null) {
+            imgAvatar.setImageBitmap(android.graphics.BitmapFactory.decodeFile(path))
+            listener?.onAvatarChanged(path)
+        }
     }
 
     private fun bindActions() {
@@ -138,6 +162,10 @@ class ToolbarDrawerView @JvmOverloads constructor(
 
         // 昵称点击 → 编辑
         tvNickname.setOnClickListener { showNicknameEditor() }
+        // 需求 2：头像点击 → 调起系统图片选择器
+        imgAvatar.setOnClickListener {
+            avatarPickerLauncher?.launch("image/*")
+        }
     }
 
     /** 开关项：开启时文字用强调色并追加" (已开启)" */
@@ -189,9 +217,9 @@ class ToolbarDrawerView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        // 抽屉只占左半宽（内容自身宽度 280dp 已限制上限）
-        val halfWidth = (right - left) / 2
-        val contentWidth = drawerContent.measuredWidth.coerceAtMost(halfWidth)
+        // 需求 1：抽屉宽度改为屏幕宽度的 2/3（而非原来的 1/2）
+        val twoThirds = (right - left) * 2 / 3
+        val contentWidth = drawerContent.measuredWidth.coerceAtMost(twoThirds)
         drawerContent.layout(0, 0, contentWidth, bottom - top)
         scrim.layout(0, 0, right - left, bottom - top)
         if (!isOpen) {

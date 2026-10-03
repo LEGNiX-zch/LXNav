@@ -138,6 +138,14 @@ class TabManager(
     /** 获取当前索引 */
     fun getCurrentIndex(): Int = currentIndex.coerceAtLeast(0)
 
+    /**
+     * 需求 12：确保存在当前标签（懒创建）。
+     * 冷启动不建立任何标签，只有真正要加载网页时才调用本方法。
+     */
+    fun ensureCurrentTab(): BrowserTab {
+        return currentTab ?: newTab("about:blank")
+    }
+
     /** 全部销毁（退出时） */
     fun destroyAll() {
         currentTab?.let { container.removeView(it.webView) }

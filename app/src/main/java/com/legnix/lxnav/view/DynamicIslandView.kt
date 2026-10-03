@@ -54,7 +54,7 @@ class DynamicIslandView @JvmOverloads constructor(
     private var pageUrl = ""
     private var listener: Listener? = null
 
-    /** 纯黑背景 drawable（复用，避免反复创建） */
+    /** 纯黑液态玻璃背景 drawable（复用，避免反复创建） */
     private val blackBg: GradientDrawable by lazy {
         GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
@@ -113,10 +113,16 @@ class DynamicIslandView @JvmOverloads constructor(
     private fun applyIslandStyle() {
         val pureBlack = Prefs.islandPureBlack
         if (pureBlack) {
-            background = blackBg
+            // 需求 4：黑色液态玻璃 —— 黑色主体 + 半透明层次 + 细边框 + 内发光
+            setBackgroundResource(R.drawable.bg_island_black_glass)
+            // 柔和阴影（API21+ elevation）+ 内发光用背景 drawable 的高光描边实现
+            elevation = dp(6).toFloat()
+            clipToPadding = false
         } else {
             setBackgroundResource(R.drawable.bg_capsule_glass)
+            elevation = 0f
         }
+        // 需求 4：亮/暗底色均为黑，文字统一白色
         textView.setTextColor(
             if (pureBlack) ContextCompat.getColor(context, R.color.island_text)
             else ContextCompat.getColor(context, R.color.glass_text)

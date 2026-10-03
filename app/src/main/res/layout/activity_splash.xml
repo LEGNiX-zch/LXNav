@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 启动页：品牌 Logo 居中展示，短暂停留后进入主页 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_page">
+
+    <ImageView
+        android:id="@+id/splashLogo"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:src="@drawable/logo_legnix"
+        android:contentDescription="@null" />
+
+</FrameLayout>
