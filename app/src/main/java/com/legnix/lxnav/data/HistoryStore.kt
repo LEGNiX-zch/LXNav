@@ -42,7 +42,8 @@ object HistoryStore {
         val existing = getAll(context)
             .filterNot { it.url == url }
             .toMutableList()
-        existing.add(0, HistoryEntry(System.currentTimeMillis(), title, url))
+        val now = System.currentTimeMillis()
+        existing.add(0, HistoryEntry(now, title, url, now))
         save(context, existing.take(MAX_ENTRIES))
     }
 

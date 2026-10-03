@@ -30,6 +30,7 @@ object Prefs {
     private const val KEY_NICKNAME = "nickname"
     private const val KEY_ISLAND_PURE_BLACK = "island_pure_black"
     private const val KEY_HISTORY_ENABLED = "history_enabled"
+    private const val KEY_ENGINE = "search_engine"
 
     /** 默认昵称 */
     const val DEFAULT_NICKNAME = "LEGNIX 用户"
@@ -43,6 +44,15 @@ object Prefs {
     enum class UaMode(val key: String, val label: String) {
         MOBILE("mobile", "手机网页"),
         DESKTOP("desktop", "桌面网页")
+    }
+
+    /** 搜索引擎（供 SearchEngine 使用，默认必应） */
+    enum class Engine(val key: String, val label: String) {
+        BING("bing", "必应"),
+        BAIDU("baidu", "百度"),
+        SO360("360", "360"),
+        SOGOU("sogou", "搜狗"),
+        DUCKDUCKGO("duckduckgo", "DuckDuckGo")
     }
 
     enum class ScreenOverride(val key: String, val label: String) {
@@ -81,6 +91,9 @@ object Prefs {
     var historyEnabled: Boolean = true
         private set
 
+    var engine: Engine = Engine.BING
+        private set
+
     /** 从 SharedPreferences 加载所有设置 */
     fun load(context: Context) {
         val sp = sp(context)
@@ -97,6 +110,8 @@ object Prefs {
             ?: DEFAULT_NICKNAME
         islandPureBlack = sp.getBoolean(KEY_ISLAND_PURE_BLACK, true)
         historyEnabled = sp.getBoolean(KEY_HISTORY_ENABLED, true)
+        engine = Engine.entries.firstOrNull { it.key == sp.getString(KEY_ENGINE, "") }
+            ?: Engine.BING
     }
 
     fun setMaxTabs(context: Context, value: Int) {
@@ -142,5 +157,10 @@ object Prefs {
     fun setHistoryEnabled(context: Context, value: Boolean) {
         historyEnabled = value
         sp(context).edit().putBoolean(KEY_HISTORY_ENABLED, value).apply()
+    }
+
+    fun setEngine(context: Context, value: Engine) {
+        engine = value
+        sp(context).edit().putString(KEY_ENGINE, value.key).apply()
     }
 }
